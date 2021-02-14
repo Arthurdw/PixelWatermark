@@ -95,7 +95,7 @@ namespace PixelwiseWatermark
             }
 
             int currentMessageIndex = 0;
-            string binaryMessage = ToBinary(ConvertToByteArray(WatermarkMessageInput.Text, Encoding.UTF8)).Replace(" ", "00100000");
+            string binaryMessage = ToBinary(ConvertToByteArray(WatermarkMessageInput.Text, Encoding.UTF8)).Replace(" ", "");
 
             for (int i = 0; i < data.Length; i += skipSize)
             {

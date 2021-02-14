@@ -79,7 +79,6 @@ namespace PixelwiseWatermark
                 for (int j = 0; j < skipSize; j++)
                 {
                     string bin = Convert.ToString(data[i + j], 2);
-                    string sub = bin.Substring(bin.Length - 1);
                     message += bin.Substring(bin.Length - 1);
                     ProgressBar.PerformStep();
                 }
@@ -89,7 +88,9 @@ namespace PixelwiseWatermark
 
         private void StartParse(object sender, EventArgs e)
         {
+            ResultBox.Text = @"Parsing...";
             string message = this.ParseMessage(this.img);
+            ResultBox.Text = @"Encoding...";
             ResultBox.Text = Encoding.UTF8.GetString(GetBytesFromBinaryString(message));
         }
 
