@@ -21,22 +21,28 @@ namespace PixelwiseWatermark
 
         private void NewWatermark_Click(object sender, EventArgs e)
         {
-            // The file path of the selected file.
             string fp = FileDialogHandler.OpenFileSelector();
 
             // If a file has been selected:
             if (fp != null) new GenerateWatermark(fp).Show();
-            else
-            {
-                DialogResult dr = MessageBox.Show("Oops...", "No file has been selected!", MessageBoxButtons.RetryCancel,
-                    MessageBoxIcon.Asterisk);
-
-                if (dr == DialogResult.Retry) this.NewWatermark_Click(sender, e);
-            }
+            else this.HandleError(this.NewWatermark_Click, sender, e);
         }
 
         private void ParseWatermark_Click(object sender, EventArgs e)
-            => MessageBox.Show(@"This has not yet been implemented!", @"Oops...", MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+        {
+            string fp = FileDialogHandler.OpenFileSelector();
+
+            // If a file has been selected:
+            if (fp != null) new ParseWatermark(fp).Show();
+            else this.HandleError(this.ParseWatermark_Click, sender, e);
+        }
+
+        private void HandleError(Action<object, EventArgs> retryCallback, object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show(@"No file has been selected!", @"Oops...", MessageBoxButtons.RetryCancel,
+                MessageBoxIcon.Asterisk);
+
+            if (dr == DialogResult.Retry) retryCallback(sender, e);
+        }
     }
 }

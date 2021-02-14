@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -53,7 +52,7 @@ namespace PixelwiseWatermark
             Rectangle rect = new Rectangle(0, 0, bm.Width, bm.Height);
             BitmapData bmd = bm.LockBits(rect, ImageLockMode.ReadOnly, bm.PixelFormat);
             IntPtr pointer = bmd.Scan0;
-            
+
             int byteCount = Math.Abs(bmd.Stride) * bm.Height;
             byte[] data = new byte[byteCount];
             ProgressBar.Maximum = data.Length + 3;
@@ -81,6 +80,7 @@ namespace PixelwiseWatermark
                     MessageBox.Show(@"The image pixel-format is currently not supported!", "Oops...", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.SetIsInProgressState(false);
                     return;
+
                 case PixelFormat.Format16bppArgb1555:
                 case PixelFormat.Format32bppArgb:
                 case PixelFormat.Format32bppPArgb:
@@ -88,13 +88,14 @@ namespace PixelwiseWatermark
                 case PixelFormat.Format64bppPArgb:
                     skipSize = 4;
                     break;
+
                 default:
                     skipSize = 3;
                     break;
             }
 
             int currentMessageIndex = 0;
-            string binaryMessage = ToBinary(ConvertToByteArray(WatermarkMessageInput.Text, Encoding.ASCII)).Replace(" ", "00100000");
+            string binaryMessage = ToBinary(ConvertToByteArray(WatermarkMessageInput.Text, Encoding.UTF8)).Replace(" ", "00100000");
 
             for (int i = 0; i < data.Length; i += skipSize)
             {
@@ -128,8 +129,9 @@ namespace PixelwiseWatermark
             this.SetButtonState(!state);
         }
 
-        public static byte[] ConvertToByteArray(string str, Encoding encoding) 
+        public static byte[] ConvertToByteArray(string str, Encoding encoding)
             => encoding.GetBytes(str);
+
         public static string ToBinary(byte[] data)
             => string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
 
